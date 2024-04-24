@@ -2,10 +2,10 @@
 
 import * as z from "zod";
 
-import { LoginSchema } from "@/lib/validation";
+import { loginSchema } from "@/lib/validation";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
-const validatedFields = LoginSchema.safeParse(values);
+export const login = async (values: z.infer<typeof loginSchema>) => {
+const validatedFields = loginSchema.safeParse(values);
 
 if (!validatedFields.success) {
     return { error: "Invalid fields!" };

@@ -1,10 +1,8 @@
 "use client"
 
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { login } from "@/actions/login";
-import { startTransition, useTransition } from "react";
+import { register } from "@/actions/register";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -23,39 +21,37 @@ import {
 	FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { loginSchema } from "@/lib/validation";
-import { useState } from "react";
+import { registerSchema } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import Link from "next/link";
-import router from "next/router";
+import * as z from "zod";
 
 export default function Login() {
 	const [error, setError] = useState<string | undefined>("");
 	const [success, setSuccess] = useState<string | undefined>("");
 	const [isPending, startTransition] = useTransition();
 
-	const form = useForm<z.infer<typeof loginSchema>>({
-		resolver: zodResolver(loginSchema),
+	const form = useForm<z.infer<typeof registerSchema>>({
+		resolver: zodResolver(registerSchema),
 		defaultValues: {
 			email: "",
 			password: "",
+			name: "",
 		}
 	})
 
-	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+	const onSubmit = async (values: z.infer<typeof registerSchema>) => {
 		setError("");
 		setSuccess("");
 		startTransition(() => {
-			login(values)
+			register(values)
 				.then((data) => {
 					setError(data.error)
 					setSuccess(data.success)
-					if (!data.error) {
-						router.push('/dashboard'); // Change '/dashboard' to your desired destination
-					}
 				})
 		})
 	};
@@ -65,14 +61,31 @@ export default function Login() {
 			<div className="w-full m-auto bg-white lg:max-w-lg">
 				<Card>
 					<CardHeader className="space-y-1">
-						<CardTitle className="text-2xl text-center">Welcome Back!</CardTitle>
+						<CardTitle className="text-2xl text-center">Welcome to TechHub!</CardTitle>
 						<CardDescription className="text-center">
-							Login to TechHub for instant access to our learning community
+							Set up your Hub account
 						</CardDescription>
 					</CardHeader>
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 							<CardContent className="grid gap-4">
+								<div className="grid gap-4">
+									<FormField
+										control={form.control}
+										name="name"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Name</FormLabel>
+												<FormControl>
+													<Input
+														{...field}
+														disabled={isPending}
+														placeholder="username" />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)} />
+								</div>
 								<div className="grid gap-4">
 									<FormField
 										control={form.control}
@@ -114,18 +127,19 @@ export default function Login() {
 							</CardContent>
 							<CardFooter className="flex flex-col">
 								<Button type="submit" className="w-full" disabled={isPending}>
-									{isPending ? "Submitting..." : "Login"}
+									{isPending ? "Submitting..." : "Create account"}
 								</Button>
 							</CardFooter>
 						</form>
 					</Form>
+
 					<div className="relative mb-2">
 						<div className="absolute inset-0 flex items-center">
 							<span className="w-full border-t" />
 						</div>
 						<div className="relative flex justify-center text-xs uppercase">
 							<span className="bg-background px-2 text-muted-foreground">
-								Or continue with
+								Or sign up with
 							</span>
 						</div>
 					</div>
@@ -140,10 +154,11 @@ export default function Login() {
 						</Button>
 					</div>
 
+
 					<p className="mt-2 text-xs text-center text-gray-700 mb-4">
-						{"New to TechHub? "}
-						<Link className="text-blue-600 hover:underline" href="/register">
-							Create an account
+						{"Already have an account? "}
+						<Link className="text-blue-600 hover:underline" href="/">
+							Sign in
 						</Link>
 					</p>
 				</Card>
