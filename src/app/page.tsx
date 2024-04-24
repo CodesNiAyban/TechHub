@@ -1,14 +1,11 @@
 "use client"
 
 import * as z from "zod";
-
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-
-import { LoginSchema } from "@/lib/validation"
-import { Button } from "@/components/ui/button"
-import { FcGoogle } from "react-icons/fc"
-import { FaGithub } from "react-icons/fa"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { login } from "@/actions/login";
+import { startTransition, useTransition } from "react";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -16,23 +13,27 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage,
-} from "@/components/ui/form"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+	FormMessage
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { LoginSchema } from "@/lib/validation";
 import { useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
-export default function Home() {
-	const [submitting, setSubmitting] = useState(false); // State to track form submission
+export default function Login() {
+	const [error, setError] = useState<string | undefined>("");
+	const [success, setSuccess] = useState<string | undefined>("");
+	const [isPending, startTransition] = useTransition();
 
 	const form = useForm<z.infer<typeof LoginSchema>>({
 		resolver: zodResolver(LoginSchema),
@@ -43,10 +44,15 @@ export default function Home() {
 	})
 
 	const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-		setSubmitting(true); // Set submitting state to true when form is submitted
-		// Perform form submission logic here, like sending data to a server
-		console.log(values); // For demonstration, logging form data to console
-		setSubmitting(false); // Reset submitting state after submission is complete
+		setError("");
+		setSuccess("");
+		startTransition(() => {
+			login(values)
+			.then((data) => {
+				setError(data.error)
+				setSuccess(data.success)
+			})
+		})
 	};
 
 	return (
@@ -72,6 +78,7 @@ export default function Home() {
 												<FormControl>
 													<Input
 														{...field}
+														disabled={isPending}
 														placeholder="john.doe@email.com"
 														type="email" />
 												</FormControl>
@@ -89,18 +96,20 @@ export default function Home() {
 												<FormControl>
 													<Input
 														{...field}
+														disabled={isPending}
 														placeholder="••••••••••"
 														type="password" />
 												</FormControl>
 												<FormMessage />
 											</FormItem>
 										)} />
+										<FormError message={error}/>
+										<FormSuccess message={success}/>
 								</div>
-
 							</CardContent>
 							<CardFooter className="flex flex-col">
-								<Button type="submit" className="w-full" disabled={submitting}>
-									{submitting ? "Submitting..." : "Login"}
+								<Button type="submit" className="w-full" disabled={isPending}>
+									{isPending ? "Submitting..." : "Login"}
 								</Button>
 							</CardFooter>
 						</form>

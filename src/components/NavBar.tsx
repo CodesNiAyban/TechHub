@@ -24,6 +24,6 @@ export default function NavBar() {
 
 function SignInButton() {
   return (
-    <Button onClick={() => signIn()}>Sign in</Button>
+    <Button onClick={() => signIn()}>Sign up</Button>
   )
 }
