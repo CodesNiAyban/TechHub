@@ -1,6 +1,8 @@
 import getSession from "@/lib/getSession";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -20,10 +22,23 @@ export default async function Page() {
     </main>
   }
 
+  const users = await prisma.user.findMany();
+
   return (
     <main className="mx-auto my-10 space-y-3">
-      <h1 className="text-center text-xl font-bold">Admin Page</h1>
-      <p className="text-center">Welcome, admin!</p>
+    <main className="flex flex-col items-center gap-6 px-3 py-10">
+      <h1 className="text-center text-4xl font-bold">TechHub</h1>
+      <h2 className="text-center text-2xl font-semibold">Users</h2>
+      <ul className="list-inside list-disc">
+        {users.map(user => (
+          <li key={user.id}>
+            <Link href={`/user/${user.id}`} className="hover:underline">
+              {user.name || `User ${user.id}`}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </main>
     </main>
   );
 }
