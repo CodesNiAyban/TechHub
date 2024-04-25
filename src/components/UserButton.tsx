@@ -46,7 +46,7 @@ export default function UserButton({ user }: UserButtonProps) {
           </DropdownMenuItem>
           {user.role === "admin" && (
             <DropdownMenuItem asChild>
-              <Link href="/admin">
+              <Link href="/dashboard/admin">
                 <Lock className="mr-2 h-4 w-4" />
                 Admin
               </Link>

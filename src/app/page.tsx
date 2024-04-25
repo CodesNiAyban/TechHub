@@ -1,10 +1,10 @@
 "use client"
-
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { login } from "@/actions/login";
 import { startTransition, useTransition } from "react";
+import styles from './login.module.css';
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -29,8 +29,13 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import Image from "next/image"
 import Link from "next/link";
 import router from "next/router";
+import { AppleIcon } from "lucide-react";
+import TechHubLogo from "../../public/assets/logo-no-background.svg";
+import Lottie from "react-lottie";
+import * as animationData from '../../public/assets/Animation - 1714069027465.json'
 
 export default function Login() {
 	const [error, setError] = useState<string | undefined>("");
@@ -61,12 +66,33 @@ export default function Login() {
 	};
 
 	return (
-		<div className="relative flex flex-col justify-center items-center min-h-screen overflow-hidden">
-			<div className="w-full m-auto bg-white lg:max-w-lg">
-				<Card>
+		<div className="h-screen flex bg-gray-50">
+			<div className="w-1/2 relative overflow-hidden">
+				<Lottie
+					options={{
+						loop: true,
+						autoplay: true,
+						animationData: animationData,
+						rendererSettings: {
+							preserveAspectRatio: 'xMidYMid slice'
+						}
+					}}
+					speed={0.25}
+					height={'100%'}
+					width={'100%'}
+					style={{
+						position: 'relative',
+						top: 0,
+						left: 0,
+						zIndex: 0,
+					}}
+				/>
+			</div>
+			<div className="w-1/2 flex justify-center items-center mt-16">
+				<Card className="p-14">
 					<CardHeader className="space-y-1">
-						<CardTitle className="text-2xl text-center">Welcome Back!</CardTitle>
-						<CardDescription className="text-center">
+						<CardTitle className="text-3xl text-center">Welcome Back!</CardTitle>
+						<CardDescription className="text-center space-y-4 ">
 							Login to TechHub for instant access to our learning community
 						</CardDescription>
 					</CardHeader>
@@ -148,6 +174,6 @@ export default function Login() {
 					</p>
 				</Card>
 			</div>
-		</div >
+		</div>
 	)
 }

@@ -8,7 +8,7 @@ import { Adapter } from "next-auth/adapters"
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   theme: {
-    logo: "/logo.png"
+    logo: "/assets/logo-color.svg"
   },
   adapter: PrismaAdapter(prisma) as Adapter,
   callbacks: {
