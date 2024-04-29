@@ -30,7 +30,7 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Lottie from "react-lottie";
 import * as z from "zod";
-import * as animationData from '../../public/assets/Animation - 1714069027465.json';
+import * as animationData from '../../../../public/assets/Animation - 1714069027465.json';
 
 export default function Login() {
 	const [error, setError] = useState<string | undefined>("");

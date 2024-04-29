@@ -1,21 +1,51 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import NextAuth from "next-auth"
-import prisma from "./lib/prisma"
-import Github from "next-auth/providers/github"
-import Google from "next-auth/providers/google"
+import { UserRole } from "@prisma/client"
+import NextAuth, { DefaultSession } from "next-auth"
 import { Adapter } from "next-auth/adapters"
+import { getUserByID } from "../data/user"
+import authConfig from "./auth.config"
+import prisma from "./lib/prisma"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+declare module "@auth/core" {
+  interface Session {
+    user: {
+      role: "ADMIN" | "GUEST"
+    } & DefaultSession["user"]
+  }
+}
+
+export const {
+  handlers,
+  signIn,
+  signOut,
+  auth,
+} = NextAuth({
   trustHost: true,
-  theme: {
-    logo: "/assets/logo-color.svg"
-  },
-  adapter: PrismaAdapter(prisma) as Adapter,
   callbacks: {
-    session({ session, user }) {
-      session.user.role = user.role;
+    async session({ token, session }) {
+
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role && session.user) {
+        session.user.role = token.role as UserRole;
+      }
       return session;
+    },
+    async jwt({ token }) {
+      if (!token.sub) return token;
+
+      const existingUser = await getUserByID(token.sub);
+
+      if (!existingUser) return token;
+
+      token.role = existingUser.role;
+
+      return token;
     }
   },
-  providers: [Google, Github]
+  adapter: PrismaAdapter(prisma) as Adapter,
+  session: { strategy: 'jwt' },
+  ...authConfig,
 })
