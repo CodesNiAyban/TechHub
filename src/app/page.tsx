@@ -1,7 +1,7 @@
 "use client"
 import { login } from "@/actions/login";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/auth/form-error";
+import { FormSuccess } from "@/components/auth/form-success";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -30,7 +30,7 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Lottie from "react-lottie";
 import * as z from "zod";
-import * as animationData from '../../public/assets/Animation - 1714069027465.json';
+import * as animationData from '../../public/assets/login.json';
 
 export default function Login() {
 	const [error, setError] = useState<string | undefined>("");

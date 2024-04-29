@@ -1,7 +1,7 @@
 "use client"
 import { login } from "@/actions/login";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/auth/form-error";
+import { FormSuccess } from "@/components/auth/form-success";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -30,22 +30,27 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Lottie from "react-lottie";
 import * as z from "zod";
-import * as animationData from '../../../../public/assets/Animation - 1714069027465.json';
+import * as animationData from '../../../../public/assets/login.json';
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { useSearchParams } from "next/navigation";
 
 export default function Login() {
 	const [error, setError] = useState<string | undefined>("");
 	const [success, setSuccess] = useState<string | undefined>("");
 	const [isPending, startTransition] = useTransition();
 
+	const searchParams = useSearchParams();
+	const urlError = searchParams.get("error") === "OAuthAccountNotlinked"
+		? "Email already in use with different provider" : "";
+
 	const form = useForm<z.infer<typeof loginSchema>>({
-		resolver: zodResolver(loginSchema),
-		defaultValues: {
-			email: "",
-			password: "",
-		}
-	})
+			resolver: zodResolver(loginSchema),
+			defaultValues: {
+				email: "",
+				password: "",
+			}
+		})
 
 	const onClick = (provider: "google" | "github") => {
 		signIn(provider, {
@@ -59,7 +64,8 @@ export default function Login() {
 		startTransition(() => {
 			login(values)
 				.then((data) => {
-					setError(data?.error)
+					setError(data?.error);
+					setSuccess(data?.success);
 				})
 		})
 	};
@@ -133,7 +139,7 @@ export default function Login() {
 												<FormMessage />
 											</FormItem>
 										)} />
-									<FormError message={error} />
+									<FormError message={error || urlError} />
 									<FormSuccess message={success} />
 								</div>
 							</CardContent>
