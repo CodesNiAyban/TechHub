@@ -31,6 +31,8 @@ import { FcGoogle } from "react-icons/fc";
 import Lottie from "react-lottie";
 import * as z from "zod";
 import * as animationData from '../../../../public/assets/Animation - 1714069027465.json';
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export default function Login() {
 	const [error, setError] = useState<string | undefined>("");
@@ -45,6 +47,12 @@ export default function Login() {
 		}
 	})
 
+	const onClick = (provider: "google" | "github") => {
+		signIn(provider, {
+			callbackUrl: DEFAULT_LOGIN_REDIRECT
+		})
+	}
+
 	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
 		setError("");
 		setSuccess("");
@@ -52,10 +60,6 @@ export default function Login() {
 			login(values)
 				.then((data) => {
 					setError(data?.error)
-					// setSuccess(data?.success!)
-					// if (!data?.error) {
-					// 	Router.push('/dashboard'); // Change '/dashboard' to your desired destination
-					// }
 				})
 		})
 	};
@@ -151,11 +155,11 @@ export default function Login() {
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-4 m-6">
-						<Button variant="outline">
+						<Button variant="outline" onClick={() => onClick("google")}>
 							<FcGoogle className="mr-2 h-4 w-4" />
 							Google
 						</Button>
-						<Button variant="outline">
+						<Button variant="outline" onClick={() => onClick("github")}>
 							<FaGithub className="mr-2 h-4 w-4" />
 							GitHub
 						</Button>
