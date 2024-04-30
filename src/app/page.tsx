@@ -60,6 +60,8 @@ export default function Login() {
 		})
 	};
 
+	// TODO: DECIDE IF REMOVE THIS OR MAINTAIN
+
 	return (
 		<div className="h-screen flex bg-gray-50">
 			<div className="w-1/2 relative overflow-hidden">

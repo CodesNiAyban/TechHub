@@ -4,7 +4,7 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import TechHubLogo from "../../public/assets/logo-no-background.svg";
-import UserButton from "./auth/UserButton";
+import UserButton from "./auth/user-button";
 import { Button } from "./ui/button";
 
 export default function NavBar() {

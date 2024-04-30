@@ -1,11 +1,10 @@
+import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import prisma from "./lib/prisma";
-import { loginSchema } from "./lib/validation";
 import { getUserByEmail } from "../data/user";
-import bcrypt from "bcryptjs";
+import { loginSchema } from "./lib/validation";
 
 const nextAuthConfig: NextAuthConfig = {
   providers: [

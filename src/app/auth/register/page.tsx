@@ -56,10 +56,12 @@ export default function Login() {
 		})
 	};
 
+	// TODO: MAKE LOGIN CARD A COMPONENT AND IMPROVE UI
+
 	return (
 		<div className="relative flex flex-col justify-center items-center min-h-screen overflow-hidden">
 			<div className="w-full m-auto bg-white lg:max-w-lg">
-				<Card>
+				<Card className="p-3">
 					<CardHeader className="space-y-1">
 						<CardTitle className="text-2xl text-center">Welcome to TechHub!</CardTitle>
 						<CardDescription className="text-center">
