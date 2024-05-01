@@ -4,6 +4,21 @@ export const updateProfileSchema = z.object({
   name: z.string().trim().min(1, "Cannot be empty"),
 });
 
+export const newPasswordSchema = z.object({
+  password: z.string().min(6, {
+    message: "Minimum 6 characters required",
+  }),
+  confirmPassword: z.string().min(6, {
+    message: "Minimum 6 characters required",
+  }),
+});
+
+export const resetSchema = z.object({
+  email: z.string().email({
+    message: "Email is Required",
+  }),
+});
+
 export const loginSchema = z.object({
   email: z.string().email({
     message: "Email is Required",
@@ -11,9 +26,9 @@ export const loginSchema = z.object({
   password: z.string().min(1, {
     message: "Password is Required",
   }).
-  max(32, {
-    message: "Password must be less than 32 characters"
-  }),
+    max(32, {
+      message: "Password must be less than 32 characters"
+    }),
 });
 
 export const registerSchema = z.object({

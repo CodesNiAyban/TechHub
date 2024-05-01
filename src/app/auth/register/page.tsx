@@ -22,7 +22,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { registerSchema } from "@/lib/validation";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -42,7 +44,13 @@ export default function Login() {
 			password: "",
 			name: "",
 		}
-	})
+	});
+
+	const onClick = (provider: "google" | "github") => {
+		signIn(provider, {
+			callbackUrl: DEFAULT_LOGIN_REDIRECT
+		})
+	}
 
 	const onSubmit = async (values: z.infer<typeof registerSchema>) => {
 		setError("");
@@ -146,11 +154,11 @@ export default function Login() {
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-4 m-6">
-						<Button variant="outline">
+						<Button variant="outline" onClick={() => onClick("google")}>
 							<FcGoogle className="mr-2 h-4 w-4" />
 							Google
 						</Button>
-						<Button variant="outline">
+						<Button variant="outline" onClick={() => onClick("github")}>
 							<FaGithub className="mr-2 h-4 w-4" />
 							GitHub
 						</Button>

@@ -45,12 +45,12 @@ export default function Login() {
 		? "Email already in use with different provider" : "";
 
 	const form = useForm<z.infer<typeof loginSchema>>({
-			resolver: zodResolver(loginSchema),
-			defaultValues: {
-				email: "",
-				password: "",
-			}
-		})
+		resolver: zodResolver(loginSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+		}
+	})
 
 	const onClick = (provider: "google" | "github") => {
 		signIn(provider, {
@@ -141,6 +141,12 @@ export default function Login() {
 												<FormMessage />
 											</FormItem>
 										)} />
+									<Link
+										href="/auth/reset"
+										className="ml-auto inline-block text-sm underline"
+									>
+										Forgot your password?
+									</Link>
 									<FormError message={error || urlError} />
 									<FormSuccess message={success} />
 								</div>

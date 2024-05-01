@@ -39,7 +39,7 @@ export const {
 
       const existingUser = await getUserByID(user.id! || "");
 
-      if(!existingUser?.emailVerified) return false;
+      if (!existingUser?.emailVerified) return false;
 
       return true;
     },
@@ -56,6 +56,8 @@ export const {
     },
     async jwt({ token }) {
       if (!token.sub) return token;
+
+      console.log(token)
 
       const existingUser = await getUserByID(token.sub);
 

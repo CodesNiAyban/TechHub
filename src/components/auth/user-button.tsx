@@ -1,3 +1,5 @@
+"use client"
+
 import avatarPlaceholder from "@/assets/images/avatar_placeholder.png";
 import { LogOut, Settings } from "lucide-react";
 import { User } from "next-auth";
@@ -15,9 +17,10 @@ import {
 } from "../ui/dropdown-menu";
 import { Lock } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { UserRole } from "@prisma/client";
 
 interface UserButtonProps {
-  user: User;
+  user: (User & { role: UserRole; }) | undefined;
 }
 
 export default function UserButton({ user }: UserButtonProps) {
@@ -26,7 +29,7 @@ export default function UserButton({ user }: UserButtonProps) {
       <DropdownMenuTrigger asChild>
         <Button size="icon" className="flex-none rounded-full">
           <Image
-            src={user.image || avatarPlaceholder}
+            src={user?.image || avatarPlaceholder}
             alt="User profile picture"
             width={50}
             height={50}
@@ -35,7 +38,7 @@ export default function UserButton({ user }: UserButtonProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>{user.name || "User"}</DropdownMenuLabel>
+        <DropdownMenuLabel>{user?.name || "User"}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
@@ -44,7 +47,7 @@ export default function UserButton({ user }: UserButtonProps) {
               <span>Settings</span>
             </Link>
           </DropdownMenuItem>
-          {user.role === "admin" && (
+          {user?.role.toString() === "admin" && (
             <DropdownMenuItem asChild>
               <Link href="/dashboard/admin">
                 <Lock className="mr-2 h-4 w-4" />
