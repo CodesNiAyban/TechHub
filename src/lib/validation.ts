@@ -29,6 +29,11 @@ export const loginSchema = z.object({
     max(32, {
       message: "Password must be less than 32 characters"
     }),
+  code: z.optional(
+    z.string().min(6, {
+      message: "Your two factor code must be 6 characters",
+    })
+  ),
 });
 
 export const registerSchema = z.object({

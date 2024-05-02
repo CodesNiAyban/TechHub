@@ -5,6 +5,7 @@ import { getUserByID } from "../data/user"
 import authConfig from "./auth.config"
 import prisma from "./lib/prisma"
 import { UserRole } from "@prisma/client"
+import { getTwoFactorConfirmationByUserId } from "@/../data/two-factor-confirmation"
 
 declare module "@auth/core" {
   interface Session {
@@ -40,6 +41,24 @@ export const {
       const existingUser = await getUserByID(user.id! || "");
 
       if (!existingUser?.emailVerified) return false;
+
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await
+          getTwoFactorConfirmationByUserId(existingUser.id);
+
+        if (!twoFactorConfirmation) {
+          return false; // TODO: MAKE TIMEOUT FOR 2FA
+        }
+
+        const hasExpired = new Date(twoFactorConfirmation.expires) < new Date();
+
+        if (hasExpired) {
+          await prisma.twoFactorConfirmation.delete({
+            where: { id: twoFactorConfirmation.id }
+          });
+          return false;
+        }
+      }
 
       return true;
     },
