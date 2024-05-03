@@ -67,25 +67,26 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
                 const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
                 if (hasExpired) {
-                    return { error: "Code expired" }
+                    return { error: "Code expired" } // TODO: Expiration handling
                 }
 
                 await prisma.twoFactorToken.delete({
                     where: { id: twoFactorToken.id }
                 })
 
-                const exisitingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id)
+                // const exisitingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id)
 
-                if (exisitingConfirmation && exisitingConfirmation.expires < new Date()) {
-                    await prisma.twoFactorConfirmation.delete({
-                        where: { id: exisitingConfirmation.id }
-                    })
-                    await generateTwoFactorConfimationToken(email, existingUser.id)
-                }
+                // if (exisitingConfirmation && exisitingConfirmation.expires < new Date()) {
+                //     await prisma.twoFactorConfirmation.delete({
+                //         where: { id: exisitingConfirmation.id }
+                //     })
+                //     await generateTwoFactorConfimationToken(email, existingUser.id)
+                // }
 
-                if (!exisitingConfirmation) {
-                    await generateTwoFactorConfimationToken(email, existingUser.id)
-                }
+                // if (!exisitingConfirmation) {
+                //     await generateTwoFactorConfimationToken(email, existingUser.id)
+                // }
+                await generateTwoFactorConfimationToken(email, existingUser.id);
 
             } else {
                 let exisitingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id)

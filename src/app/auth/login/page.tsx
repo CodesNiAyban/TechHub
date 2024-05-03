@@ -71,12 +71,12 @@ export default function Login() {
 			login(values)
 				.then((data) => {
 					if (data?.error) {
-						form.reset();
+						if (!showTwoFactor) form.reset();
 						setError(data.error);
 					}
 
 					if (data?.success) {
-						form.reset();
+						if (!showTwoFactor) form.reset();
 						setSuccess(data.success);
 					}
 

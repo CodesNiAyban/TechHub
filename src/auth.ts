@@ -47,7 +47,7 @@ export const {
           getTwoFactorConfirmationByUserId(existingUser.id);
 
         if (!twoFactorConfirmation) {
-          return false; // TODO: MAKE TIMEOUT FOR 2FA
+          return false; 
         }
 
         const hasExpired = new Date(twoFactorConfirmation.expires) < new Date();

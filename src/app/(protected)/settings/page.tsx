@@ -1,8 +1,9 @@
 "use client"
 
-import Link from "next/link"
 import { CircleUser, LogOut, Menu, Package2, Search } from "lucide-react"
+import Link from "next/link"
 
+import { logout } from "@/actions/logout"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -23,9 +24,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { signOut } from "next-auth/react"
+import { useCurrentUser } from "../../../../hooks/use-current-user"
 
 export function Dashboard() {
+  const user = useCurrentUser();
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -143,7 +145,7 @@ export function Dashboard() {
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <button onClick={() => signOut({ callbackUrl: "/auth/login" })}
+                <button onClick={() => logout()}
                   className="flex w-full items-center">
                   <LogOut className="mr-2 h-4 w-4" /> Sign Out
                 </button>
@@ -221,6 +223,5 @@ export function Dashboard() {
     </div>
   )
 }
-
 
 export default Dashboard;
